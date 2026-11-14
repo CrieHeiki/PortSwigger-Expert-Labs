@@ -17,7 +17,7 @@ $parse is a function that compiles a string into an expression function. When th
 At the same time, i try to add more query parameter at the URL and the server response like this
 ![image.png](image/image3.png)
 
-See that, add more query parameter is available so i try to call alert function like this but it failed
+See that add more query parameter is available so i try to call alert function like this but it failed
 ![image.png](image/image4.png)
 
 I notice that the single quote is encoded by HTML-encode so I guess doubles quotes will have the same result.
