@@ -4,9 +4,10 @@ This lab uses AngularJS in an unusual way where the $eval function is not availa
 To solve the lab, perform a cross-site scripting attack that escapes the sandbox and executes the alert function without using the $eval function.
 ## Steps:
 This application provides a search feature.
-![image.png](images/image1.png)
+![image.png](image/image1.png)
+
 Because the name of the lab mentions about AngularJS so I tried some calculate into the input of search bar but return nothing. So i try to check the response from server and see this
-![image.png](images/image2.png)
+![image.png](image/image2.png)
 In this line
  ```jsx
     $scope.value = $parse(key)($scope.query);
@@ -14,10 +15,10 @@ In this line
 $parse is a function that compiles a string into an expression function. When that returned function is called with a context, it evaluates the original string as an AngularJS expression against that context and returns the result. That mean we can use this to exploit.
 
 At the same time, i try to add more query parameter at the URL and the server response like this
-![image.png](images/image3.png)
+![image.png](image/image3.png)
 
 See that, add more query parameter is available so i try to call alert function like this but it failed
-![image.png](images/image4.png)
+![image.png](image/image4.png)
 
 I notice that the single quote is encoded by HTML-encode so I guess doubles quotes will have the same result.
 
