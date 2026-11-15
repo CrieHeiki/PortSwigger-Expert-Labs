@@ -6,13 +6,13 @@ To solve the lab, perform a cross-site scripting attack that escapes the sandbox
 This application provides a search feature.
 ![image.png](image/image1.png)
 
-Because the name of the lab mentions about AngularJS so I tried some calculate into the input of search bar but return nothing. So i try to check the response from server and see this
+Because the name of the lab mentions AngularJS so I tried some calculations into the input of search bar but it returned nothing. So I checked the response from server and see this
 ![image.png](image/image2.png)
 In this line
  ```jsx
     $scope.value = $parse(key)($scope.query);
  ```
-- $parse is a function that compiles a string into an expression function. When that returned function is called with a context, it evaluates the original string as an AngularJS expression against that context and returns the result. That mean we can use this to exploit.
+- $parse is a function that compiles a string into an expression function. When that returned function is called with a context, it evaluates the original string as an AngularJS expression against that context and returns the result. That means we can use this to exploit.
 - For example, the meaning of these code inside script tag is
 ```jsx
 // Create a 'query' object on $scope to store user input
@@ -29,10 +29,10 @@ $scope.query[key] = '5*5';
 $scope.value = $parse(key)($scope.query); // '5*5'
 ```
 
-At the same time, i try to add more query parameter at the URL and the server response like this
+At the same time, I tried adding more query parameter at the URL and the server response like this
 ![image.png](image/image3.png)
 
-See that add more query parameter is available so i try to call alert function like this but it failed
+See that add more query parameter is available so I tried calling the alert function like this but it failed
 ![image.png](image/image4.png)
 
 I notice that the single quote is encoded by HTML-encode so I guess double quotes will have the same result. Look at the name of the lab I researched more about AngularJS sandbox. The AngularJS sandbox was an internal mechanism designed to restrict what expressions inside templates could do — essentially acting as a security boundary to prevent malicious code execution when using features like ng-bind or {{ }} interpolation. The sandbox maintained a list of restricted identifiers and properties that were blocked in expressions, such as:
@@ -47,10 +47,14 @@ This explains why the AngularJS sandbox is a separate obstacle from the HTML-enc
 
 ## Payload Explanation
 
+Since I cannot use `$eval` or any string literals, I needed to solve three problems:
+
 1. A way to create string values without using quotes — since any quote character
    gets HTML-encoded before reaching AngularJS, breaking normal string syntax.
 2. A way to escape the AngularJS sandbox, which blocks direct access to dangerous
    properties like `constructor`.
+3. A replacement for `$eval` to actually trigger evaluation of the constructed
+   payload, since `$eval` is disabled in this lab.
 
 ### Creating strings without quotes
 
@@ -79,7 +83,7 @@ expressions evaluated *after* it runs — it needs a second evaluation to be use
 
 ### Using the orderBy filter
 
-I used the `orderBy` filter instead. Internally, `orderBy` evaluates its sort-key argument as an AngularJS expression:
+I used the `orderBy` filter. Internally, `orderBy` evaluates its sort-key argument as an AngularJS expression:
 
 ​```
 [1]|orderBy:<expression to evaluate>
