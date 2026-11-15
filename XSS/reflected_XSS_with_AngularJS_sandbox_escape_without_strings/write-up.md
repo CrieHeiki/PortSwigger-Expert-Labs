@@ -17,6 +17,10 @@ In this line
 ```jsx
 //Create a query property and assign an empty object to it
 $scope.query = {};
+//Create a key variable and assign parameter name of a query
+var key = 'search';
+//Create
+$scope.value
 ```
 
 At the same time, i try to add more query parameter at the URL and the server response like this
