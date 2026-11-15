@@ -37,10 +37,10 @@ See that add more query parameter is available so i try to call alert function l
 
 I notice that the single quote is encoded by HTML-encode so I guess double quotes will have the same result. Look at the name of the lab I researched more about AngularJS sandbox. The AngularJS sandbox was an internal mechanism designed to restrict what expressions inside templates could do — essentially acting as a security boundary to prevent malicious code execution when using features like ng-bind or {{ }} interpolation. The sandbox maintained a list of restricted identifiers and properties that were blocked in expressions, such as:
 - Global objects
-- Prototype access:__proto__, constructor
+- Prototype access: __proto__, constructor
 - Dangerous methods: call, apply, bind
 - Access to Function constructor: Function.constructor
-- Access to DOM APIs:location, history
+- Access to DOM APIs: location, history
 
 This explains why the AngularJS sandbox is a separate obstacle from the HTML-encoding issue: even if I find a way to avoid using quotes entirely, any expression that still contains a blocked identifier like `constructor` would be caught and blocked by the sandbox before it gets evaluated.
 ![image.png](image/image5.png)
@@ -77,7 +77,7 @@ disrupted, which breaks the sandbox's ability to correctly detect dangerous
 identifiers such as `constructor`. Note this overwrite only takes effect on
 expressions evaluated *after* it runs — it needs a second evaluation to be useful.
 
-### Replacing $eval with the orderBy filter
+### Using the orderBy filter
 
 I used the `orderBy` filter instead. Internally, `orderBy` evaluates its sort-key argument as an AngularJS expression:
 
