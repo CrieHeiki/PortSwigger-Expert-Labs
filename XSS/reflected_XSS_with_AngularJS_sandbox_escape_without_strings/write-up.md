@@ -15,12 +15,18 @@ In this line
 - $parse is a function that compiles a string into an expression function. When that returned function is called with a context, it evaluates the original string as an AngularJS expression against that context and returns the result. That mean we can use this to exploit.
 - For example, the meaning of these code inside script tag is
 ```jsx
-//Create a query property and assign an empty object to it
+// Create a 'query' object on $scope to store user input
 $scope.query = {};
-//Create a key variable and assign parameter name of a query
+
+// 'key' represents the name of the query parameter. In this hardcoded example it's 'search', but in the real application this value is taken dynamically from the actual parameter NAME supplied in the URL — meaning an attacker can control it directly.
 var key = 'search';
-//Create
-$scope.value
+
+// Assign the parameter's value ('5*5' in this example) to $scope.query[key]
+$scope.query[key] = '5*5';
+
+// $parse(key) compiles the string stored in 'key' into an expression function. Calling that function with $scope.query as the context evaluates 'key' as an AngularJS expression against $scope.query, and returns the result to $scope.value.
+// Since 'key' is attacker-controlled (it comes from the parameter name), this line allows an arbitrary AngularJS expression to be evaluated — this is the root cause of the vulnerability (client-side template injection).
+$scope.value = $parse(key)($scope.query); // '5*5'
 ```
 
 At the same time, i try to add more query parameter at the URL and the server response like this
@@ -29,11 +35,15 @@ At the same time, i try to add more query parameter at the URL and the server re
 See that add more query parameter is available so i try to call alert function like this but it failed
 ![image.png](image/image4.png)
 
-I notice that the single quote is encoded by HTML-encode so I guess doubles quotes will have the same result.
+I notice that the single quote is encoded by HTML-encode so I guess double quotes will have the same result. Look at the name of the lab I researched more about AngularJS sandbox. The AngularJS sandbox was an internal mechanism designed to restrict what expressions inside templates could do — essentially acting as a security boundary to prevent malicious code execution when using features like ng-bind or {{ }} interpolation. The sandbox maintained a list of restricted identifiers and properties that were blocked in expressions, such as:
+- Global objects
+- Prototype access:__proto__, constructor
+- Dangerous methods: call, apply, bind
+- Access to Function constructor: Function.constructor
+- Access to DOM APIs:location, history
+This explains why the AngularJS sandbox is a separate obstacle from the HTML-encoding issue: even if I find a way to avoid using quotes entirely, any expression that still contains a blocked identifier like `constructor` would be caught and blocked by the sandbox before it gets evaluated.
 
 ## Payload Explanation
-
-Since I cannot use the `$eval` function or any string literals, I need two things:
 
 1. A way to create string values without using quotes — since any quote character
    gets HTML-encoded before reaching AngularJS, breaking normal string syntax.
