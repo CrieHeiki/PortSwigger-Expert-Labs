@@ -43,6 +43,7 @@ I notice that the single quote is encoded by HTML-encode so I guess double quote
 - Access to DOM APIs:location, history
 
 This explains why the AngularJS sandbox is a separate obstacle from the HTML-encoding issue: even if I find a way to avoid using quotes entirely, any expression that still contains a blocked identifier like `constructor` would be caught and blocked by the sandbox before it gets evaluated.
+![image.png](image/image5.png)
 
 ## Payload Explanation
 
@@ -105,6 +106,8 @@ Injected as a new URL parameter NAME (URL-encoding `=` as `%3d`):
 ​```
 GET /?search=1&toString().constructor.prototype.charAt%3d[].join;[1]|orderBy:toString().constructor.fromCharCode(120,61,97,108,101,114,116,40,49,41)=1
 ​```
+![image.png](image/image6.png)
+![image.png](image/image7.png)
 
 ### How it works, step by step
 
