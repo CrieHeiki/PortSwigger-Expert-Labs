@@ -41,6 +41,7 @@ I notice that the single quote is encoded by HTML-encode so I guess double quote
 - Dangerous methods: call, apply, bind
 - Access to Function constructor: Function.constructor
 - Access to DOM APIs:location, history
+
 This explains why the AngularJS sandbox is a separate obstacle from the HTML-encoding issue: even if I find a way to avoid using quotes entirely, any expression that still contains a blocked identifier like `constructor` would be caught and blocked by the sandbox before it gets evaluated.
 
 ## Payload Explanation
@@ -49,8 +50,6 @@ This explains why the AngularJS sandbox is a separate obstacle from the HTML-enc
    gets HTML-encoded before reaching AngularJS, breaking normal string syntax.
 2. A way to escape the AngularJS sandbox, which blocks direct access to dangerous
    properties like `constructor`.
-3. A replacement for `$eval` to actually trigger the evaluation of our constructed
-   payload, since `$eval` itself is disabled in this lab.
 
 ### Creating strings without quotes
 
@@ -79,10 +78,7 @@ expressions evaluated *after* it runs — it needs a second evaluation to be use
 
 ### Replacing $eval with the orderBy filter
 
-Since `$eval` is unavailable, I used the `orderBy` filter instead. Internally,
-`orderBy` evaluates its sort-key argument as an AngularJS expression — the same
-underlying behavior as `$eval`, just under a different name that isn't blocked
-by the lab's restriction:
+I used the `orderBy` filter instead. Internally, `orderBy` evaluates its sort-key argument as an AngularJS expression:
 
 ​```
 [1]|orderBy:<expression to evaluate>
