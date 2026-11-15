@@ -12,7 +12,12 @@ In this line
  ```jsx
     $scope.value = $parse(key)($scope.query);
  ```
-$parse is a function that compiles a string into an expression function. When that returned function is called with a context, it evaluates the original string as an AngularJS expression against that context and returns the result. That mean we can use this to exploit.
+- $parse is a function that compiles a string into an expression function. When that returned function is called with a context, it evaluates the original string as an AngularJS expression against that context and returns the result. That mean we can use this to exploit.
+- For example, the meaning of these code inside script tag is
+```jsx
+//Create a query property and assign an empty object to it
+$scope.query = {};
+```
 
 At the same time, i try to add more query parameter at the URL and the server response like this
 ![image.png](image/image3.png)
