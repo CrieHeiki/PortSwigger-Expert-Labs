@@ -1,1 +1,5 @@
+# Exploiting XXE to retrieve data by repurposing a local DTD
+# Descriptiom
+This lab has a "Check stock" feature that parses XML input but does not display the result. To solve the lab, trigger an error message containing the contents of the /etc/passwd file. You'll need to reference an existing DTD file on the server and redefine an entity from it. 
 
+Hint: Systems using the GNOME desktop environment often have a DTD at /usr/share/yelp/dtd/docbookx.dtd containing an entity called ISOamso.
