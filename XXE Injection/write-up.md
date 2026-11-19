@@ -24,7 +24,7 @@ Send the request to Intruder and mark `FILE` to bruteforce
 
 ![image.png](images/image3.png)
 ![image.png](images/image4.png)
-
+![image.png](images/image5.png)
 The result showed that 5 DTDs exist on the server that I could potentially use. From the lab description's hint about the `ISOamso` entity, I researched which local DTD file commonly defines it. `ISOamso` is a standard ISO 8879 parameter entity (part of the "Added Math Symbols: Ordinary" character set) that is referenced inside `docbookx.dtd` — a DTD file typically shipped on GNOME-based Linux systems (used by the Yelp help viewer) at the fixed path `/usr/share/yelp/dtd/docbookx.dtd`. This file was confirmed present in the Intruder bruteforce results from the previous step.
 
 ## Payload Explanation
@@ -76,8 +76,8 @@ This loads the real `docbookx.dtd` file from the server's filesystem. Per XML's 
 Internally, `docbookx.dtd` references `%ISOamso;` to pull in its (normally harmless) math symbol entities. Because my redefinition is used instead, this reference actually triggers my nested entity chain, cascading through `%eval;` and `%error;`.
 
 ### Result
-
-The parser attempts to resolve the nonexistent path `file:///nonexistent/<contents of /etc/passwd>`, fails, and throws a `FileNotFoundException`. Since the application returns raw XML parser error messages in its response, the full contents of `/etc/passwd` appear directly in the error message — solving the lab.
+![image.png](images/image6.png)
+![image.png](images/image7.png)
 
 ## Root Cause
 
