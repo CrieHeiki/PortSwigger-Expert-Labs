@@ -110,38 +110,26 @@ Injected as a new URL parameter NAME (URL-encoding `=` as `%3d`):
 ​```
 GET /?search=1&toString().constructor.prototype.charAt%3d[].join;[1]|orderBy:toString().constructor.fromCharCode(120,61,97,108,101,114,116,40,49,41)=1
 ​```
+
+### Result
 ![image.png](image/image6.png)
 ![image.png](image/image7.png)
 
 ### How it works, step by step
 
-1. The first statement overwrites `charAt` on `String.prototype`, corrupting
-   AngularJS's internal lexer for any expression parsed afterward.
-2. The `orderBy` filter evaluates its sort-key argument, acting as a stand-in
-   for the disabled `$eval`.
+1. The first statement overwrites `charAt` on `String.prototype`, corrupting AngularJS's internal lexer for any expression parsed afterward.
+2. The `orderBy` filter evaluates its sort-key argument, acting as a stand-in for the disabled `$eval`.
 3. That argument is a string built via `fromCharCode`, decoding to `x=alert(1)`.
-4. Because the lexer is already broken from step 1, the sandbox fails to flag
-   this as dangerous, and `alert(1)` executes successfully.
+4. Because the lexer is already broken from step 1, the sandbox fails to flag this as dangerous, and `alert(1)` executes successfully.
 
 ### Root Cause
 
-- The application passes a user-controlled value (the query parameter *name*,
-  not just its value) directly into `$parse()`, allowing arbitrary AngularJS
-  expressions to be compiled and evaluated.
-- The app relies on an old version of AngularJS (pre-1.6) that still implements
-  the expression sandbox, which has been publicly proven to be bypassable in
-  multiple ways — Angular itself removed this sandbox entirely from 1.6 onward,
-  acknowledging it could not be made secure.
-- Blocking only `$eval` is insufficient, since other built-in filters
-  (like `orderBy`) perform equivalent expression evaluation internally.
+- The application passes a user-controlled value (the query parameter *name*, not just its value) directly into `$parse()`, allowing arbitrary AngularJS expressions to be compiled and evaluated.
+- The app relies on an old version of AngularJS (pre-1.6) that still implements the expression sandbox, which has been publicly proven to be bypassable in multiple ways — Angular itself removed this sandbox entirely from 1.6 onward, acknowledging it could not be made secure.
+- Blocking only `$eval` is insufficient, since other built-in filters (like `orderBy`) perform equivalent expression evaluation internally.
 
 ### Remediation
 
-- Never pass user-controlled input (including parameter names, not just values)
-  into `$parse()` or any other dynamic expression-evaluation mechanism.
-- Upgrade to AngularJS 1.6+ or a modern framework, and avoid relying on the
-  sandbox as a security boundary — treat it as a bug-prevention aid only, not
-  a defense against malicious input.
-- Apply strict input validation/allowlisting on any value used to construct
-  dynamic expressions, and perform proper output encoding appropriate to the
-  context (HTML, JS, URL) consistently across both server and client side.
+- Never pass user-controlled input (including parameter names, not just values) into `$parse()` or any other dynamic expression-evaluation mechanism.
+- Upgrade to AngularJS 1.6+ or a modern framework, and avoid relying on the sandbox as a security boundary — treat it as a bug-prevention aid only, not a defense against malicious input.
+- Apply strict input validation/allowlisting on any value used to construct dynamic expressions, and perform proper output encoding appropriate to the context (HTML, JS, URL) consistently across both server and client side.
