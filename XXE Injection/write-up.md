@@ -1,5 +1,5 @@
 # Exploiting XXE to retrieve data by repurposing a local DTD
-# Descriptiom
+# Description
 This lab has a "Check stock" feature that parses XML input but does not display the result. To solve the lab, trigger an error message containing the contents of the /etc/passwd file. You'll need to reference an existing DTD file on the server and redefine an entity from it. 
 
 ## Steps
@@ -11,9 +11,9 @@ First, I declared a DOCTYPE with an external entity pointing to a file that actu
 ![image.png](images/image1.png)
 And i got XML parsing error message in response.
 
-Next, I tried with a non-exist file
+Next, I tried with a non-exist file.
 
-`<DOCTYPE xxe [<!ENTITY % file SYSTEM "file:///hehe" %file;]>`
+`<!DOCTYPE xxe [<!ENTITY % file SYSTEM "file:///hehe" %file;]>`
 ![image.png](images/image2.png)
 Focus on the response that give me the information about the file are not exist in the system.
 
@@ -23,9 +23,9 @@ The list of DTD's I use for this lab: https://github.com/GoSecure/dtd-finder/blo
 Send the request to Intruder and mark `FILE` to bruteforce
 
 ![image.png](images/image3.png)
+![image.png](images/image4.png)
 
-The result show that there are 5 DTD's exist that I can find. From that, I will research the entity that are defined in each DTD's
-But to get more quickly, I will resolve base on the information from the lab. There is `ISOamso` are defined that I can use to exploit.
+The result showed that 5 DTDs exist on the server that I could potentially use. From the lab description's hint about the `ISOamso` entity, I researched which local DTD file commonly defines it. `ISOamso` is a standard ISO 8879 parameter entity (part of the "Added Math Symbols: Ordinary" character set) that is referenced inside `docbookx.dtd` — a DTD file typically shipped on GNOME-based Linux systems (used by the Yelp help viewer) at the fixed path `/usr/share/yelp/dtd/docbookx.dtd`. This file was confirmed present in the Intruder bruteforce results from the previous step.
 
 ## Payload Explanation
 
