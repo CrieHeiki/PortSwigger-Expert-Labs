@@ -5,3 +5,5 @@ This lab has a "Check stock" feature that parses XML input but does not display 
 ## Steps
 I access the lab and focus on the name of this lab. This lab mentions retrieve data by repurposing a local DTD. So I have to determine the DTD file exist in this system.
 First, I declared a DOCTYPE with an external entity pointing to a file that actually exist
+
+![image.png](images/image1.png)
