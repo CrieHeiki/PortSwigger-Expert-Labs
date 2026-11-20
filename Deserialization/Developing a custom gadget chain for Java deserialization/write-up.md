@@ -9,6 +9,7 @@ You can log in to your own account using the following credentials: wiener:peter
 Before hands-on this lab, I want to explain what is serialize and deserialize.
 - Serialize is a method of converting object data into byte stream data
 - Deserialize is a method of converting byte stream data into object data.
+
 Together, they enable object persistence, data transfer, and communication between different systems while preserving an object's state.
 
 During Java deserialization, ObjectInputStream.readObject() reconstructs the serialized object graph. If a serializable class defines a custom readObject(ObjectInputStream) method, Java invokes that method as part of the deserialization process.
