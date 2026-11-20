@@ -21,7 +21,7 @@ Now, access the lab. This lab provided an account so I logged in.
 After logged in, I had seen cookie start with `rO0`. It is a sign of serialized data of Java language so I tried to decode it. 
 ![image.png](images/image3.png)
 
-This show that AccessTokenUser class has 2 properties username, accessToken => Cannot bypass by change username.
+This showed that AccessTokenUser class has 2 properties username, accessToken => Cannot bypass by change username.
 
 Back to the page source
 ![image.png](images/image4.png)
@@ -139,7 +139,7 @@ This class has 3 fields
     private transient Product product;
 
 ```
-This is a constructor recieves `id` when create an object
+This is a constructor receives `id` when create an object
 ```jsx
 public ProductTemplate(String id)
     {
@@ -185,7 +185,7 @@ private void readObject(ObjectInputStream inputStream) throws IOException, Class
         }
     }
 ```
-In here I can see the sql query can easily be exploited by SQL Injection. I can manipulate the `id` parameter via deserialize process. If I create an object with a contructor and serialize it, I can probably control the id parameter.
+In here I can see the sql query can easily be exploited by SQL Injection. I can manipulate the `id` parameter via deserialize process. If I create an object with a constructor and serialize it, I can probably control the id parameter.
 So I prepared 2 files:
 `Serialize.java`
 ```jsx
@@ -232,7 +232,7 @@ public class ProductTemplate implements Serializable
     }
 }
 ```
-With correct folder for sure.
+With correct folder for sure (placed in the matching package folder structure, data/productcatalog/, to match the original class).
 
 I tried set id = `"1'"`, and it return error message because the query become:
 ```SELECT * FROM products WHERE id = '1''```
