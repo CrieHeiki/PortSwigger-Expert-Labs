@@ -9,10 +9,11 @@ You can log in to your own account using the following credentials: wiener:peter
 Before hands-on this lab, I want to explain what is serialize and deserialize.
 - Serialize is a method of converting object data into byte stream data
 - Deserialize is a method of converting byte stream data into object data.
-So what is the purpose of this function. Object data is exist as data structure in memory so it cannot be sent just by HTTP/HTTPS. The reason that, we have serialize to convert it into byte stream data to solve this problem.
+Together, they enable object persistence, data transfer, and communication between different systems while preserving an object's state.
 
-There is a method that we have to focus on:
-- ObjectInputStream.readObject(): this method of the class being deserialized can run custom code. If this method read serialized data from untrusted source, attack can pass the malicious object into the website via its deserialization process.
+During Java deserialization, ObjectInputStream.readObject() reconstructs the serialized object graph. If a serializable class defines a custom readObject(ObjectInputStream) method, Java invokes that method as part of the deserialization process.
+
+Therefore, deserializing untrusted data can trigger application-defined code, potentially leading to security vulnerabilities.
 
 Now, access the lab. This lab provided an account so I logged in.
 ![image.png](images/image1.png)
